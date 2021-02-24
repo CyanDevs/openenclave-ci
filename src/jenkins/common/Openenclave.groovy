@@ -130,8 +130,14 @@ def emailJobStatus(String status) {
  */
 def WinCompilePackageTest(String dirName, String buildType, String hasQuoteProvider, Integer timeoutSeconds, String lviMitigation = 'None', String lviMitigationSkipTests = 'ON', List extra_cmake_args = [], String branchName, String repositoryName) {
     cleanWs()
-    git branch: '\$branchName',
-        url: 'https://github.com/\$repositoryName'
+    checkout([$class: 'GitSCM',
+          branches: [[name: "${branchName}"]],
+          extensions: [[$class: 'SubmoduleOption',
+                        disableSubmodules: false,
+                        recursiveSubmodules: true,
+                        trackingSubmodules: false]], 
+          submoduleCfg: [], 
+          userRemoteConfigs: [[url: "https://github.com/${repositoryName}"]]])
     dir(dirName) {
         bat """
             vcvars64.bat x64 && \
