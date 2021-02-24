@@ -128,9 +128,10 @@ def emailJobStatus(String status) {
  * Compile open-enclave on Windows platform, generate NuGet package out of it, 
  * install the generated NuGet package, and run samples tests against the installation.
  */
-def WinCompilePackageTest(String dirName, String buildType, String hasQuoteProvider, Integer timeoutSeconds, String lviMitigation = 'None', String lviMitigationSkipTests = 'ON', List extra_cmake_args = []) {
+def WinCompilePackageTest(String dirName, String buildType, String hasQuoteProvider, Integer timeoutSeconds, String lviMitigation = 'None', String lviMitigationSkipTests = 'ON', List extra_cmake_args = [], String branchName, String repositoryName) {
     cleanWs()
-    checkout scm
+    git branch: '\$branchName',
+        url: 'https://github.com/\$repositoryName'
     dir(dirName) {
         bat """
             vcvars64.bat x64 && \
